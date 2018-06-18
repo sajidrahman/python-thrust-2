@@ -8,6 +8,7 @@ from pip._vendor.distlib.compat import raw_input
 from urllib.parse import urlparse
 from urllib.parse import urlsplit
 import urllib.request, urllib.parse, urllib.error
+from urllib.error import URLError, HTTPError
 import sys
 import ssl
 
@@ -39,8 +40,13 @@ def download_file(url):
         
         print(size, 'characters downloaded')
         filehandler.close()
-        
-    except Exception as e:
+    except HTTPError as e:
+        print('The server couldn\'t fulfill the request.')
+        print('Error code: ', e.code)
+    except URLError as e:
+        print('We failed to reach a server.')
+        print('Reason: ', e.reason)    
+    except Exception as e: #All other exceptions
         print(str(e))
 
 
