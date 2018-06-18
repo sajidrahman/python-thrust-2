@@ -13,7 +13,6 @@ SECRET_KEY = b'super_secret_key^($0'
 
     
 def main():
-    file="master.txt"
     file1 = "new_master.txt"
     hash1 = create_digest(file)
 #     print("Going to sleep...")
@@ -32,10 +31,11 @@ def create_digest(file):
     f.close()
     digest = signed_digest_maker.hexdigest()
     print(digest)
-#     return digest
+    return digest
     
 def verify_digest(actual_digest, file):
     incoming_digest = create_digest(file)
+#   comparing hash values as string is vulnerable to timing attack  
     if str(actual_digest) == str(incoming_digest):
         print("OK: digest matches")
     else:

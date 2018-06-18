@@ -23,7 +23,7 @@ def main():
     while True:
         account = raw_input("Enter account no. or type 'quit' to end: ")
         pattern = r"AB[1-9]\d{5}"
-        if 1: #re.match(pattern, account):
+        if re.match(pattern, account): #input validation for a/c number
             option = raw_input("Enter 'd' for deposit, 'w' for withdraw: ")
             if str(option) == 'd':
                 amount = raw_input("Enter amount: ")
@@ -35,10 +35,8 @@ def main():
                 sys.exit("The session has ended")
             else:
                 print("Not a valid option, please try again!")
-#         else:
-#             print("Not a valid account number, please try again!")
-        
-#         withdraw(account, amount)
+        else:
+            print("Not a valid account number, please try again!")
     
     
 
@@ -85,25 +83,18 @@ def withdraw(account, amount):
         return False
 
 def check_bal(account):
-    sql = "SELECT  balance, status FROM Account WHERE account_no = %s" 
-    cursor = cnx.cursor(buffered=True)
-    cursor.execute(sql % account)
-    row = cursor.fetchone()
-    print(row)
-    cnx.commit()
-    cursor.close()
-    return row
-#     try:
-#         cursor = cnx.cursor(buffered=True)
-#         cursor.execute(sql % account)
-#         row = cursor.fetchone()
-#         print(row)
-#         cnx.commit()
-#         cursor.close()
-#         return row
-#     except:
-#        cursor.close()
-#        print("An error occurred") 
+    sql = "SELECT  balance, status FROM Account WHERE account_no = %s"  
+    try:
+        cursor = cnx.cursor(buffered=True)
+        cursor.execute(sql, (account,))
+        row = cursor.fetchone()
+        print(row)
+        cnx.commit()
+        cursor.close()
+        return row
+    except:
+       cursor.close()
+       print("An error occurred") 
 
 if __name__=="__main__":
     main()

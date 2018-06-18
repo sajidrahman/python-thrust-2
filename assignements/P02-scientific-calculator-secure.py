@@ -7,19 +7,14 @@ from math import *
 from pip._vendor.distlib.compat import raw_input
 import sys
 
+#make a list of safe functions
+safe_list = ['math','acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh', 'degrees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 
+ 'modf', 'pi', 'pow', 'radians', 'sin','sinh', 'sqrt', 'tan', 'tanh']
+#use the list to filter the local namespace
+safe_dict = dict([ (k, locals().get(k, None)) for k in safe_list ])
+#add any needed builtins back in.
+safe_dict['abs'] = abs
 
-   # make all math functions available
-# 
-# print("1. sin(x)*sin(x) + cos(x)*cos(x)")
-# print("2. 2*sin(x)+1")
-# print("3. 1 - 2*sin(x)*sin(x)")
-# print("4. 2*tan(x)/(1 - tan(x)*tan(x))")
-# print("Press the number corresponding to a formula to execute it."+
-# "Or add a formula by pressing 'n' ")
-# formula = "sin(x)*sin(x) + cos(x)*cos(x)"
-# x = eval("3.14")
-# result = eval(formula)
-# print ('%s for x=%g yields %g' % (formula, x, result))
 print ("*** Welcome to the Python Calculator ***")
 expresssion_list = []
 while True:
@@ -40,9 +35,13 @@ while True:
        if isinstance(x, float):
            print("Not a decimal type value, please try again!")
            continue
+       safe_dict['x']=x
        x = eval(x)
-       result = eval(expr) # eval was using the variable x which is in it local 
-       #scope to map it with the argument 'x' in trigonometric functions
-       expresssion_list.append(expr)
-#        print(result)
-       print ('%s for x=%g yields %g' % (expr, x, result))
+       try:
+           result = eval(expr,{},{"x":x,"sin":sin, "cos":cos, "tan":tan, 
+                                  "log":log, "log10":log10, "sqrt":sqrt}) # eval was using the variable x which is in it local scope
+           expresssion_list.append(expr)
+           print ('%s for x=%g yields %g' % (expr, x, result))
+       except:
+            print("Illegal input detected, please try with a valid trigonometric expression.")
+#        

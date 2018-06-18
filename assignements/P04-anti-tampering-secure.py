@@ -14,10 +14,8 @@ SECRET_KEY = b'super_secret_key^($0'
     
 def main():
     file="master.txt"
-    hash1 = create_digest(file)
-#     print("Going to sleep...")
-#     time.sleep(5)
-    verify_digest(hash1, file)
+    hash = create_digest(file)
+    verify_digest(hash, file)
     
     
 def create_digest(file):
@@ -31,7 +29,7 @@ def create_digest(file):
     f.close()
     digest = signed_digest_maker.hexdigest()
     print(digest)
-#     return digest
+    return digest
     
 def verify_digest(actual_digest, file):
     incoming_digest = create_digest(file)
